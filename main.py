@@ -1,12 +1,14 @@
 import discord
 import json, urllib.request, requests
 from ratelimit import limits, sleep_and_retry
+from ranked import ranked_search
+from normals import normals_search
 
 TOKEN = 'NTg4NTExMzcxNDE5OTc1NzI2.XQGOTA.xinDTyeelyEpcC9qNo-mUi4OotY'
 
 client = discord.Client()
 
-key = 'RGAPI-95b049b8-974b-4335-9137-ceaaa236e3f7'
+key = 'RGAPI-6d4a7a6b-c4aa-4e5e-9ba9-b9e3b66e22df'
 
 
 @sleep_and_retry
@@ -16,13 +18,13 @@ async def on_message(message):
     # we do not want the bot to reply to itself
     if message.author == client.user:
         return
-
-    if message.content == '!expose':
-        await message.channel.send('Make sure you enter a summoner name after typing the !expose command')
+    author_id = message.author
+    if message.content == '!rules':
+        await message.channel.send('Type !rank, !flex, !norm, or !aram followed by a summoner name to search their history and see who that person\'s \
+played with for the last 90 games of the specified game mode.')
         return    
-
-    if message.content.startswith('!expose'):
-        account_name = message.content[8:]        
+    if message.content.startswith('!rank') or message.content.startswith('!norm') or message.content.startswith('!flex') or message.content.startswith('!aram'):
+        account_name = message.content[6:]        
         sum_id_URL = 'https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/'+ account_name + '?api_key=' + key 
         try:
             summoner_info = requests.get(sum_id_URL).json()
@@ -31,63 +33,10 @@ async def on_message(message):
         except:
             await message.channel.send('Hmm, that summoner doesn\'t exist. Try again :(')
             return
-
-        player_ranking_URL = "https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/"+ summoner_id +"?api_key=" + key 
-        player_ranking_info = requests.get(player_ranking_URL).json()
-
-        for queue_type in player_ranking_info:
-            if queue_type['queueType'] == 'RANKED_SOLO_5x5':
-                await message.channel.send(account_name + f'\'s current rank is: {queue_type["tier"].capitalize()} {queue_type["rank"]}')
-                break
-        else:
-            await message.channel.send("Hmm, " + account_name + " isn\'t ranked in solo/duo right now. There might be some results from earlier seasons though.")
-        await message.channel.send("Loading results...")
-        match_history_url = 'https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/' + account_id + '?queue=420&endIndex=90&api_key=' + key
-        match_history_data = requests.get(match_history_url).json()
-        match_id_list = []
-        for match in match_history_data['matches']:
-            match_id_list.append(match['gameId'])
-        print(match_id_list)
-        player_list = {}
-        for match in match_id_list:
-            match_id = match
-            match_url = 'https://na1.api.riotgames.com/lol/match/v4/matches/' + str(match_id) + '?api_key=' + key
-            match_details = requests.get(match_url).json()
-            team_side = []
-            try:
-                match_details['participantIdentities']
-            except:
-                await message.channel.send("Unable to get the recent player's matches. Most likely the API call limit was reached, so wait at least two minutes and try again.")
-                return 
-            for player in match_details['participantIdentities']:
-                if player['player']['accountId'] == account_id:
-                    if player['participantId'] in [1,2,3,4,5]:
-                        team_side = [0,1,2,3,4]
-                    else:
-                        team_side = [5,6,7,8,9]
-            for participantId in team_side:
-                if match_details['participantIdentities'][participantId]['player']['accountId'] != account_id:
-                    player_name = match_details['participantIdentities'][participantId]['player']['summonerName']
-                    player_list[player_name] = player_list.get(player_name,0) + 1
-        edited_player_list = player_list.copy()
-        for player_key in player_list:
-            if player_list[player_key] in [1,2]:
-                del edited_player_list[player_key]
-        ordered_player_list = sorted(edited_player_list.items(), key=lambda x: x[1], reverse=True)  
-        if len(ordered_player_list) == 0:
-            await message.channel.send("You haven't duoed with anyone recently...damn")
-            return
-        total_duoed_games = 0
-        for x in ordered_player_list:
-            await message.channel.send(f'Summoner Name: {x[0]} | Total Games Duoed: {x[1]} | Percent Duoed With This Person: {round(((x[1]/len(match_id_list)) * 100),2)}%')
-            total_duoed_games += x[1]
-        if 100 * total_duoed_games/len(match_id_list) > 100:
-            await message.channel.send(f'Overall, {account_name} has duoed 100% of his/her games.')
-            return
-        await message.channel.send(f'Overall, {account_name} has duoed {round(100 * total_duoed_games/len(match_id_list), 2)}% of his/her games.')
-        await message.channel.send('Disclaimer: a person only shows up if they duoed more than 2 games. There\'s also a chance (especially in higher elos) that some people who show up are just random players \
-who happened to be on the same team multiple times.')
-    
+        if message.content.startswith('!rank'):
+            await ranked_search(account_name,account_id,summoner_id,key,message)
+        elif message.content.startswith('!norm') or message.content.startswith('!flex') or message.content.startswith('!aram'):
+            await normals_search(account_name,account_id,summoner_id,key,message,message.content[1:5])
 @client.event
 async def on_ready():
     print('Logged in as')
