@@ -12,7 +12,7 @@ async def ranked_search(account_name,account_id,summoner_id,key,message):
     else:
         await message.channel.send("Hmm, " + account_name + " isn\'t ranked in solo/duo right now. There might be some results from earlier seasons though.")
     await message.channel.send("Loading results...")
-    match_history_url = 'https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/' + account_id + '?queue=420&endIndex=90&api_key=' + key
+    match_history_url = 'https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/' + account_id + '?queue=420&endIndex=80&api_key=' + key
     match_history_data = requests.get(match_history_url).json()
     match_id_list = []
     for match in match_history_data['matches']:

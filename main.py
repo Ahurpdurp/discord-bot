@@ -3,12 +3,14 @@ import json, urllib.request, requests
 from ratelimit import limits, sleep_and_retry
 from ranked import ranked_search
 from normals import normals_search
+import env
 
-TOKEN = 'NTg4NTExMzcxNDE5OTc1NzI2.XQGOTA.xinDTyeelyEpcC9qNo-mUi4OotY'
+
+TOKEN = env.discord_token
 
 client = discord.Client()
 
-key = 'RGAPI-6d4a7a6b-c4aa-4e5e-9ba9-b9e3b66e22df'
+key = env.riot_api_key
 
 
 @sleep_and_retry

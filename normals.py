@@ -4,7 +4,6 @@ from ratelimit import limits, sleep_and_retry
 
 async def normals_search(account_name,account_id,summoner_id,key,message,game_type):
     player_ranking_URL = "https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/"+ summoner_id +"?api_key=" + key 
-    print(player_ranking_URL)
     player_ranking_info = requests.get(player_ranking_URL).json()
     if game_type == 'flex':
         for queue_type in player_ranking_info:
@@ -22,16 +21,15 @@ async def normals_search(account_name,account_id,summoner_id,key,message,game_ty
             await message.channel.send("Hmm, " + account_name + " isn\'t ranked in solo/duo right now. Looking up games now.")
     await message.channel.send("Loading results...")
     if game_type == 'norm':
-        match_history_url = 'https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/' + account_id + '?queue=430&queue=400&endIndex=90&api_key=' + key
+        match_history_url = 'https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/' + account_id + '?queue=430&queue=400&endIndex=80&api_key=' + key
     elif game_type == 'flex':
-        match_history_url = 'https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/' + account_id + '?queue=440&endIndex=90&api_key=' + key
+        match_history_url = 'https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/' + account_id + '?queue=440&endIndex=80&api_key=' + key
     elif game_type == 'aram':
-        match_history_url = 'https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/' + account_id + '?queue=450&queue=100&endIndex=90&api_key=' + key
+        match_history_url = 'https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/' + account_id + '?queue=450&queue=100&endIndex=80&api_key=' + key
     match_history_data = requests.get(match_history_url).json()
     match_id_list = []
     for match in match_history_data['matches']:
         match_id_list.append(match['gameId'])
-    print(match_id_list)
     player_list = {}
     for match in match_id_list:
         match_id = match
