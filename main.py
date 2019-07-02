@@ -24,7 +24,10 @@ async def on_message(message):
     if message.content == '!rules':
         await message.channel.send('Type !rank, !flex, !norm, or !aram followed by a summoner name to search their history and see who that person\'s \
 played with for the last 90 games of the specified game mode.')
-        return    
+        return  
+    if message.content.startswith('!ranked'):
+        await message.channel.send('Remember, start with !rank, not !ranked. Try again :)')
+        return  
     if message.content.startswith('!rank') or message.content.startswith('!norm') or message.content.startswith('!flex') or message.content.startswith('!aram'):
         account_name = message.content[6:]        
         sum_id_URL = 'https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/'+ account_name + '?api_key=' + key 
