@@ -3,14 +3,13 @@ import json, urllib.request, requests
 from ratelimit import limits, sleep_and_retry
 from ranked import ranked_search
 from normals import normals_search
-from boto.s3.connection import S3Connection
 
 
-TOKEN = S3Connection(os.environ['discord_token'])
+TOKEN = str(os.environ.get['discord_token'])
 
 client = discord.Client()
 
-key = S3Connection(os.environ['riot_api_key'])
+key = str(os.environ.get['riot_api_key'])
 
 
 @sleep_and_retry
