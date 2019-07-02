@@ -5,6 +5,8 @@ from ranked import ranked_search
 from normals import normals_search
 
 
+
+
 TOKEN = str(os.environ.get['discord_token'])
 
 client = discord.Client()
