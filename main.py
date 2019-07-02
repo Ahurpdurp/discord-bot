@@ -3,7 +3,6 @@ import json, urllib.request, requests
 from ratelimit import limits, sleep_and_retry
 from ranked import ranked_search
 from normals import normals_search
-import env
 from boto.s3.connection import S3Connection
 
 
