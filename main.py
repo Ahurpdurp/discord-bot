@@ -7,11 +7,11 @@ import os
 
 
 
-TOKEN = str(os.environ.get('discord_token')
+TOKEN = str(os.environ.get('discord_token'))
 
 client = discord.Client()
 
-key = str(os.environ.get('riot_api_key')
+key = str(os.environ.get('riot_api_key'))
 
 
 @sleep_and_retry
