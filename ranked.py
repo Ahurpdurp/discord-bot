@@ -17,7 +17,6 @@ async def ranked_search(account_name,account_id,summoner_id,key,message):
     match_id_list = []
     for match in match_history_data['matches']:
         match_id_list.append(match['gameId'])
-    print(match_id_list)
     player_list = {}
     for match in match_id_list:
         match_id = match
