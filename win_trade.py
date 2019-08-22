@@ -50,4 +50,4 @@ async def win_trade_search(account_name,account_id,summoner_id,key,message):
     for x in ordered_player_list:
         await message.channel.send(f'Summoner Name: {x[0]} | Total Games Played Against: {x[1]} | Percent Played Against This Person: {round(((x[1]/len(match_id_list)) * 100),2)}%')
         total_duoed_games += x[1]
-    await message.channel.send('Disclamer: wintrading is a touchy subject. There\'s a chance they could\'ve just played against the same person a lot.')
+    await message.channel.send('Disclamer: wintrading is a touchy subject and I\'m pretty sure this bot doesn\'t work. You can ask me about the logic behind this bot (ahurpdurp). There\'s a chance they could\'ve just played against the same person a lot.')
