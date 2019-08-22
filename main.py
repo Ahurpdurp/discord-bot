@@ -25,7 +25,7 @@ async def on_message(message):
     author_id = message.author
     if message.content == '!rules':
         await message.channel.send('Type !rank, !flex, !norm, !wint (wintrade) or !aram followed by a summoner name to search their history and see who that person\'s \
-played with for the last 90 games of the specified game mode.')
+played with for the last 90 games of the specified game mode. If you have any other questions ask me (ahurpdurp).')
         return  
     if message.content.startswith('!ranked'):
         await message.channel.send('Remember, start with !rank, not !ranked. Try again :)')
