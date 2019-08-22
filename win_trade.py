@@ -44,7 +44,7 @@ async def win_trade_search(account_name,account_id,summoner_id,key,message):
             del edited_player_list[player_key]
     ordered_player_list = sorted(edited_player_list.items(), key=lambda x: x[1], reverse=True)  
     if len(ordered_player_list) == 0:
-        await message.channel.send("This player probably hasn't wintraded in the past 85 games.")
+        await message.channel.send("This player probably hasn't wintraded in the past 85 games. Also, this command isn\'t complete since I\'d have to basically rewrite the whole code. Ask me (ahurpdurp) if you have any questions.")
         return
     total_duoed_games = 0
     for x in ordered_player_list:
